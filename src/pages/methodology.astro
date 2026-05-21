@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Our Methodology | severancepayestimator.com"
+  description="How we calculate severance estimates — the formulas, data sources, and industry benchmarks behind the Severance Pay Estimator."
+>
+  <h1>Methodology</h1>
+  <p class="byline">Reviewed by <strong>Sloan Whitfield, SHRM-CP</strong> &mdash; Editor-in-Chief &amp; Separation Agreements Lead. Updated May 2026.</p>
+
+  <p>
+    The Severance Pay Estimator produces evidence-based estimates grounded in publicly available compensation data, HR industry surveys, and employment law standards. This page explains how the calculator works, where the underlying data comes from, and what the estimates can and cannot tell you.
+  </p>
+
+  <h2>The Core Formula</h2>
+  <p>
+    Our estimator begins with the industry-standard formula used by the majority of U.S. employers with formal severance policies: <strong>weeks of base pay per year of service</strong>. The rate varies by industry and by level. For most roles, the range is one to two weeks per year; in finance and executive roles, two to four weeks per year is common.
+  </p>
+  <p>
+    Weekly pay is derived from the annual salary input divided by 52. The number of weeks is calculated as: (years of service) × (weeks/year rate for your industry) × (reason multiplier) × (employment type adjustment). The result produces a low-end and high-end estimate, reflecting the realistic range rather than a single point estimate that would suggest false precision.
+  </p>
+
+  <h2>Industry Benchmarks</h2>
+  <p>
+    Industry-specific rates are drawn from several sources:
+  </p>
+  <ul>
+    <li><strong>Bureau of Labor Statistics (BLS) National Compensation Survey:</strong> Provides data on the prevalence and structure of severance pay plans by industry sector and establishment size.</li>
+    <li><strong>SHRM Compensation Benchmarking Survey:</strong> Annual survey of HR professionals covering severance formulas, caps, and policy structures across major U.S. industries.</li>
+    <li><strong>WorldatWork Severance and Separation Benefits Survey:</strong> Detailed analysis of separation practices including formula rates, benefit continuation, and outplacement usage.</li>
+    <li><strong>Publicly disclosed separation agreements:</strong> SEC filings (Form 8-K, proxy statements) for publicly traded companies disclose executive separation terms, which inform the upper bounds of our finance and technology estimates.</li>
+  </ul>
+
+  <h2>Reason for Separation Multipliers</h2>
+  <p>
+    The circumstances of a separation materially affect the likely outcome. Our model applies the following adjustments to the base formula:
+  </p>
+  <ul>
+    <li><strong>Layoff or RIF:</strong> A 1.0–1.15x multiplier reflects the higher baseline offer typical in involuntary, business-driven separations, where employers have both legal risk mitigation incentives and reputational considerations.</li>
+    <li><strong>Mutual agreement:</strong> A 0.9–1.0x multiplier reflects slightly lower typical offers when the separation is framed as consensual.</li>
+    <li><strong>Performance-based:</strong> A 0.6–0.8x multiplier, acknowledging that many performance separations result in little or no severance. We retain a floor to account for companies that still offer a nominal package to reduce litigation exposure.</li>
+  </ul>
+
+  <h2>WARN Act Baseline</h2>
+  <p>
+    For manufacturing and other industries where mass layoffs are common, the WARN Act's 60-day back-pay obligation effectively sets a floor on the value of any severance package for qualifying events. Our estimates do not double-count WARN Act liability with severance pay, but users subject to WARN should note that their total separation compensation may be higher than the calculator shows if WARN Act back pay applies.
+  </p>
+
+  <h2>Limitations</h2>
+  <p>
+    This tool produces statistical estimates, not guarantees. It cannot account for:
+  </p>
+  <ul>
+    <li>Individual employment contracts or offer letters with specific severance provisions</li>
+    <li>Collective bargaining agreements that supersede standard policy</li>
+    <li>State-specific laws that may require higher payments (e.g., New York WARN Act)</li>
+    <li>Company-specific severance plans that deviate from industry norms</li>
+    <li>The negotiating leverage created by potential legal claims (discrimination, retaliation, FMLA interference)</li>
+    <li>Equity, deferred compensation, or bonus components not reflected in base salary</li>
+  </ul>
+  <p>
+    For these reasons, we recommend using this estimator as a benchmark to inform negotiation, not as a definitive statement of what you are owed. An employment attorney can assess your specific situation and identify additional entitlements that a general-purpose calculator cannot capture.
+  </p>
+
+  <h2>Update Schedule</h2>
+  <p>
+    Industry benchmarks are reviewed and updated annually, or sooner when significant new survey data is published. All content is reviewed by our editorial team prior to publication.
+  </p>
+
+  <p class="disclaimer">
+    Methodology documentation is provided for transparency and educational purposes. Nothing on this page constitutes legal or financial advice.
+  </p>
+</BaseLayout>

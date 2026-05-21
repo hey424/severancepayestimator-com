@@ -1,0 +1,366 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+}
+
+const { title, description, canonical } = Astro.props;
+const siteUrl = 'https://severancepayestimator.com';
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6434377544325972" crossorigin="anonymous"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-accent: #0a66c2;
+      --color-accent-dark: #084f99;
+      --color-accent-light: #e8f1fb;
+      --color-text: #1a1a2e;
+      --color-text-muted: #555;
+      --color-border: #dde3ec;
+      --color-bg: #ffffff;
+      --color-bg-soft: #f6f8fb;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --radius: 8px;
+      --max-w: 760px;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    .site-header {
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .site-logo {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+
+    .site-logo span { color: var(--color-text); }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--color-accent); }
+
+    /* MAIN */
+    main {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 4rem;
+    }
+
+    /* HEADINGS */
+    h1 { font-size: 2rem; font-weight: 800; line-height: 1.25; margin-bottom: 0.75rem; letter-spacing: -0.5px; }
+    h2 { font-size: 1.35rem; font-weight: 700; margin: 2.25rem 0 0.75rem; letter-spacing: -0.2px; }
+    h3 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+
+    p { margin-bottom: 1rem; color: var(--color-text); }
+    p + p { margin-top: 0; }
+
+    a { color: var(--color-accent); }
+    a:hover { color: var(--color-accent-dark); }
+
+    ul, ol { padding-left: 1.4rem; margin-bottom: 1rem; }
+    li { margin-bottom: 0.35rem; }
+
+    /* BYLINE */
+    .byline {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    /* CARD */
+    .card {
+      background: var(--color-bg-soft);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* FORM */
+    .calc-form {
+      background: var(--color-bg-soft);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 580px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    input, select {
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: var(--color-bg);
+      color: var(--color-text);
+      transition: border-color 0.15s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(10,102,194,0.12);
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem 1.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary:hover { background: var(--color-accent-dark); }
+
+    /* RESULT */
+    .result-box {
+      display: none;
+      background: var(--color-accent-light);
+      border: 1px solid var(--color-accent);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .result-box.visible { display: block; }
+
+    .result-box h3 { margin-top: 0; color: var(--color-accent-dark); }
+
+    .result-range {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--color-accent);
+      margin: 0.5rem 0;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.25rem;
+      font-size: 0.92rem;
+    }
+
+    th {
+      background: var(--color-accent);
+      color: #fff;
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    tr:nth-child(even) td { background: var(--color-bg-soft); }
+
+    /* GUIDE LIST */
+    .guide-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .guide-list li {
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.85rem 0;
+    }
+
+    .guide-list li:last-child { border-bottom: none; }
+
+    .guide-list a {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .guide-list p { margin: 0.2rem 0 0; font-size: 0.88rem; color: var(--color-text-muted); }
+
+    /* FAQ */
+    .faq-item { margin-bottom: 1.5rem; }
+    .faq-item dt { font-weight: 700; margin-bottom: 0.3rem; }
+    .faq-item dd { margin-left: 0; color: var(--color-text); }
+
+    /* PROFILE */
+    .profile {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .profile h3 { margin-top: 0; }
+    .profile .credentials {
+      font-size: 0.82rem;
+      color: var(--color-accent);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: var(--color-bg-soft);
+      border-top: 1px solid var(--color-border);
+      padding: 2rem 1.25rem;
+      margin-top: 3rem;
+    }
+
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+
+    .footer-nav a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .footer-nav a:hover { color: var(--color-accent); }
+
+    .footer-credit {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+    }
+
+    /* DISCLAIMER */
+    .disclaimer {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      background: var(--color-bg-soft);
+      border-left: 3px solid var(--color-accent);
+      padding: 0.75rem 1rem;
+      margin-top: 2rem;
+      border-radius: 0 4px 4px 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a class="site-logo" href="/">Severance<span>Calc</span></a>
+      <ul class="nav-links">
+        <li><a href="/">Calculator</a></li>
+        <li><a href="/case-types">Pay Types</a></li>
+        <li><a href="/guides">Guides</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <ul class="footer-nav">
+        <li><a href="/about">About</a></li>
+        <li><a href="/methodology">Methodology</a></li>
+        <li><a href="/editorial">Editorial Team</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+      </ul>
+      <p class="footer-credit">&copy; 2026 The Click Lab &mdash; Reviewed by the Editorial Team. Informational only, not legal advice.</p>
+    </div>
+  </footer>
+</body>
+</html>

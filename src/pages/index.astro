@@ -1,0 +1,261 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Severance Pay Estimator | Calculate Your Package | severancepayestimator.com"
+  description="Use our free severance pay estimator to calculate your package based on years of service, salary, and industry standards. Get an evidence-based estimate in seconds."
+>
+  <h1>Severance Pay Estimator</h1>
+  <p class="byline">Reviewed by <strong>Sloan Whitfield, SHRM-CP</strong> &mdash; Editor-in-Chief &amp; Separation Agreements Lead. Updated May 2026.</p>
+
+  <p>
+    Severance pay is compensation offered by an employer to an employee upon separation from employment. It is most commonly provided during layoffs, reductions in force (RIF), or mutually agreed departures — but it is not automatically guaranteed under federal law. The amount you receive depends on a combination of factors: your years of service, annual salary, the reason for separation, your industry, and the terms of any employment contract or company policy you're subject to.
+  </p>
+  <p>
+    This free Severance Pay Estimator applies real-world benchmarks drawn from BLS compensation surveys, SHRM research, and industry best practices to give you a realistic estimate of what your package might look like. Use it as a starting point before you negotiate — understanding the going rate puts you in a far stronger position at the table.
+  </p>
+
+  <h2>Calculate Your Severance</h2>
+
+  <form class="calc-form" id="sevCalcForm" novalidate>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="empType">Employment Type</label>
+        <select id="empType" name="empType">
+          <option value="fulltime">Full-Time (Salaried)</option>
+          <option value="parttime">Part-Time</option>
+          <option value="exempt">Exempt (FLSA)</option>
+          <option value="nonexempt">Non-Exempt (FLSA)</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="years">Years of Service</label>
+        <input type="number" id="years" name="years" min="0" max="50" step="0.5" placeholder="e.g. 7" required />
+      </div>
+
+      <div class="form-field">
+        <label for="salary">Annual Salary ($)</label>
+        <input type="number" id="salary" name="salary" min="0" step="1000" placeholder="e.g. 85000" required />
+      </div>
+
+      <div class="form-field">
+        <label for="reason">Reason for Separation</label>
+        <select id="reason" name="reason">
+          <option value="layoff">Layoff</option>
+          <option value="rif">Reduction in Force (RIF)</option>
+          <option value="mutual">Mutual Agreement</option>
+          <option value="performance">Performance-Based</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="industry">Industry</label>
+        <select id="industry" name="industry">
+          <option value="finance">Finance / Banking</option>
+          <option value="tech">Technology</option>
+          <option value="healthcare">Healthcare</option>
+          <option value="retail">Retail / Consumer</option>
+          <option value="manufacturing">Manufacturing</option>
+          <option value="government">Government / Public Sector</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="state">State</label>
+        <input type="text" id="state" name="state" placeholder="e.g. California" maxlength="30" />
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary">Estimate My Severance</button>
+
+    <div class="result-box" id="resultBox">
+      <h3>Your Estimated Severance Range</h3>
+      <div class="result-range" id="resultRange"></div>
+      <p id="resultNote"></p>
+      <p id="resultWeeks"></p>
+      <p class="disclaimer" style="margin-top:0.75rem;">
+        This estimate is for informational purposes only and is not a guarantee of any specific amount. Actual severance depends on your employment agreement, company policy, state law, and negotiation. Consult an employment attorney before signing any agreement.
+      </p>
+    </div>
+  </form>
+
+  <script>
+    const form = document.getElementById('sevCalcForm');
+    const resultBox = document.getElementById('resultBox');
+    const resultRange = document.getElementById('resultRange');
+    const resultNote = document.getElementById('resultNote');
+    const resultWeeks = document.getElementById('resultWeeks');
+
+    // Weeks per year of service by industry (low, high)
+    const industryRates = {
+      finance:       { low: 2, high: 4 },
+      tech:          { low: 2, high: 3 },
+      healthcare:    { low: 1, high: 2 },
+      retail:        { low: 1, high: 2 },
+      manufacturing: { low: 1, high: 2 },
+      government:    { low: 1, high: 2 },
+      other:         { low: 1, high: 2 },
+    };
+
+    // Reason multiplier applied to base calculation
+    const reasonMultiplier = {
+      layoff:      { low: 1.0, high: 1.1 },
+      rif:         { low: 1.05, high: 1.15 },
+      mutual:      { low: 0.9, high: 1.0 },
+      performance: { low: 0.6, high: 0.8 },
+    };
+
+    // Part-time adjustment
+    const empTypeAdjust = {
+      fulltime:   1.0,
+      exempt:     1.0,
+      nonexempt:  0.9,
+      parttime:   0.5,
+    };
+
+    function fmt(n) {
+      return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const years    = parseFloat(document.getElementById('years').value) || 0;
+      const salary   = parseFloat(document.getElementById('salary').value) || 0;
+      const industry = document.getElementById('industry').value;
+      const reason   = document.getElementById('reason').value;
+      const empType  = document.getElementById('empType').value;
+
+      if (years <= 0 || salary <= 0) {
+        alert('Please enter your years of service and annual salary.');
+        return;
+      }
+
+      const weekSalary = salary / 52;
+      const rates = industryRates[industry] || industryRates.other;
+      const rm    = reasonMultiplier[reason] || reasonMultiplier.layoff;
+      const adj   = empTypeAdjust[empType] || 1.0;
+
+      const weeksLow  = Math.max(2, years * rates.low  * rm.low  * adj);
+      const weeksHigh = Math.max(4, years * rates.high * rm.high * adj);
+
+      const low  = Math.round(weekSalary * weeksLow);
+      const high = Math.round(weekSalary * weeksHigh);
+
+      resultRange.textContent = `${fmt(low)} – ${fmt(high)}`;
+      resultWeeks.textContent = `Estimated weeks of pay: ${weeksLow.toFixed(1)} – ${weeksHigh.toFixed(1)} weeks`;
+
+      const notes = [];
+      if (reason === 'rif' || reason === 'layoff') {
+        notes.push('Mass layoffs and RIF events typically yield the highest packages. Use this estimate as a floor — many employers go higher when pressed.');
+      } else if (reason === 'performance') {
+        notes.push('Performance-based separations typically receive smaller packages. An employment attorney can help you understand your leverage.');
+      } else {
+        notes.push('Mutual separation agreements are negotiable. Your estimate reflects typical mid-range packages for your industry and tenure.');
+      }
+      resultNote.textContent = notes.join(' ');
+
+      resultBox.classList.add('visible');
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  </script>
+
+  <h2>How Severance Is Calculated</h2>
+  <p>
+    The most common formula used by U.S. employers is <strong>one to two weeks of base pay per year of service</strong>. A mid-level manager with eight years at a company earning $90,000 per year might expect four to sixteen weeks of pay — roughly $6,900 to $27,700 — depending on industry norms and the circumstances of the departure.
+  </p>
+  <p>
+    This formula is a starting point, not a ceiling. Employees with formal employment contracts, offer letters that include severance language, or collective bargaining agreements may be entitled to substantially more. Executive-level employees routinely negotiate packages that range from six months to two years of total compensation, including bonuses and equity acceleration.
+  </p>
+  <p>
+    Importantly, the <strong>reason for separation matters</strong>. Employers initiating a layoff or RIF have more legal and reputational incentive to offer generous packages. They often include a general release of claims — meaning you waive the right to sue — in exchange for enhanced pay. If you're over 40, the Older Workers Benefit Protection Act (OWBPA) gives you 21 days to consider the agreement and 7 days to revoke it after signing.
+  </p>
+
+  <h2>Typical Severance by Industry</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Industry</th>
+        <th>Low End (weeks/year)</th>
+        <th>High End (weeks/year)</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Finance / Banking</td>
+        <td>2 weeks</td>
+        <td>4 weeks</td>
+        <td>Executive roles often 6–12 months</td>
+      </tr>
+      <tr>
+        <td>Technology</td>
+        <td>2 weeks</td>
+        <td>3 weeks</td>
+        <td>2022–2024 layoffs averaged ~16 weeks for senior ICs</td>
+      </tr>
+      <tr>
+        <td>Healthcare</td>
+        <td>1 week</td>
+        <td>2 weeks</td>
+        <td>Unionized roles may be higher via CBA</td>
+      </tr>
+      <tr>
+        <td>Retail / Consumer</td>
+        <td>1 week</td>
+        <td>2 weeks</td>
+        <td>Hourly workers may receive a lump-sum offer</td>
+      </tr>
+      <tr>
+        <td>Manufacturing</td>
+        <td>1 week</td>
+        <td>2 weeks</td>
+        <td>WARN Act frequently applies (100+ employee sites)</td>
+      </tr>
+      <tr>
+        <td>Government / Public</td>
+        <td>1 week</td>
+        <td>2 weeks</td>
+        <td>Civil service rules vary widely by jurisdiction</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>What's Often Included in a Severance Package</h2>
+  <p>Cash pay is the headline number, but a full severance package often includes several additional elements worth real money:</p>
+  <ul>
+    <li><strong>COBRA continuation subsidy:</strong> Employers sometimes pay all or part of your health insurance premiums for 3–6 months after separation. At average family premiums of $1,800+/month, this can add $5,000–$11,000 in value.</li>
+    <li><strong>Outplacement services:</strong> Career coaching, resume review, and job search support through a third-party firm. Value ranges from $1,000 to $10,000 depending on level.</li>
+    <li><strong>Equity vesting acceleration:</strong> For employees with unvested stock options or RSUs, a package may include full or partial acceleration of the vesting schedule. This is highly negotiable at the senior level.</li>
+    <li><strong>Non-disparagement clauses:</strong> A two-way agreement that prevents both parties from making negative public statements. Protects your professional reputation and is standard in most agreements.</li>
+    <li><strong>Non-compete and non-solicitation restrictions:</strong> These limit your ability to work for competitors or recruit former colleagues. Scope, duration, and geography are all negotiable — and some states (California, Minnesota, North Dakota) largely ban them.</li>
+    <li><strong>Reference letter:</strong> A written positive reference or an agreed-upon neutral reference policy can be worth more than cash when re-entering the job market.</li>
+    <li><strong>Bonus proration:</strong> If you were terminated before a bonus payout, you may be able to negotiate a prorated portion of any earned but unpaid bonus.</li>
+  </ul>
+
+  <h2>Related Guides</h2>
+  <ul class="guide-list">
+    <li>
+      <a href="/guides/how-to-negotiate-severance">How to Negotiate Your Severance Package</a>
+      <p>Step-by-step tactics for getting more — from the first conversation to the final signature.</p>
+    </li>
+    <li>
+      <a href="/guides/severance-pay-tax-guide">How Severance Pay Is Taxed</a>
+      <p>Federal and state tax treatment, withholding rates, and strategies to minimize your bill.</p>
+    </li>
+    <li>
+      <a href="/guides/warn-act-severance-guide">WARN Act Severance: What You're Owed When Laid Off</a>
+      <p>When the WARN Act applies, what it requires, and how to claim your back pay.</p>
+    </li>
+    <li>
+      <a href="/guides/what-to-do-before-signing-severance">What to Do Before Signing a Severance Agreement</a>
+      <p>The review period, attorney consultation, ADEA rights, and red flags to watch for.</p>
+    </li>
+  </ul>
+
+  <p class="disclaimer">
+    This calculator provides general estimates based on industry benchmarks and should not be construed as legal advice. Individual outcomes vary significantly based on your specific employment contract, company policy, state law, and negotiation. Consult a licensed employment attorney before signing any separation agreement.
+  </p>
+</BaseLayout>
