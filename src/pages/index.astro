@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import LeadCapture from '../components/LeadCapture.astro';
 ---
 <BaseLayout
   title="Severance Pay Estimator | Calculate Your Package | severancepayestimator.com"
@@ -81,7 +82,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </form>
 
-  <script>
+  
+
+  <LeadCapture caseType="severance" caseTypeLabel="Severance Negotiation" />
+<script>
     const form = document.getElementById('sevCalcForm');
     const resultBox = document.getElementById('resultBox');
     const resultRange = document.getElementById('resultRange');
@@ -238,19 +242,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <h2>Related Guides</h2>
   <ul class="guide-list">
     <li>
-      <a href="/guides/how-to-negotiate-severance">How to Negotiate Your Severance Package</a>
+      <a href="/guides/how-to-negotiate-severance/">How to Negotiate Your Severance Package</a>
       <p>Step-by-step tactics for getting more — from the first conversation to the final signature.</p>
     </li>
     <li>
-      <a href="/guides/severance-pay-tax-guide">How Severance Pay Is Taxed</a>
+      <a href="/guides/severance-pay-tax-guide/">How Severance Pay Is Taxed</a>
       <p>Federal and state tax treatment, withholding rates, and strategies to minimize your bill.</p>
     </li>
     <li>
-      <a href="/guides/warn-act-severance-guide">WARN Act Severance: What You're Owed When Laid Off</a>
+      <a href="/guides/warn-act-severance-guide/">WARN Act Severance: What You're Owed When Laid Off</a>
       <p>When the WARN Act applies, what it requires, and how to claim your back pay.</p>
     </li>
     <li>
-      <a href="/guides/what-to-do-before-signing-severance">What to Do Before Signing a Severance Agreement</a>
+      <a href="/guides/what-to-do-before-signing-severance/">What to Do Before Signing a Severance Agreement</a>
       <p>The review period, attorney consultation, ADEA rights, and red flags to watch for.</p>
     </li>
   </ul>
